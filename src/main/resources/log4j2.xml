@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+
+        <Property name="LOG_DIR" value="logs/"/>
+
+        <Property name="COMMON_PATTERN">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] (%F:%L) %-5level %logger{36} --- %msg%n
+        </Property>
+
+        <Property name="ROLLING_PATTERN">
+            %d{ISO8601} %-5p [%t] (%F:%L) --- %m%n
+        </Property>
+
+        <Property name="FAIL_LOG_PATTERN">
+            %m%n
+        </Property>
+
+    </Properties>
+
+    <Appenders>
+        <Console name="ConsoleLog" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${COMMON_PATTERN}"/>
+            <ThresholdFilter level="info" onMatch="ACCEPT" />
+        </Console>
+
+        <RollingFile name="Common" fileName="${LOG_DIR}common.log"
+                     filePattern="${LOG_DIR}common.%d{yyyy-MM-dd-HH}.log">
+            <PatternLayout pattern="${ROLLING_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+
+    </Appenders>
+
+
+    <Loggers>
+
+        <!--Core-->
+
+        <Root level="debug">
+            <AppenderRef ref="ConsoleLog"/>
+        </Root>
+
+        <Logger name="common" level="info">
+            <AppenderRef ref="Common"/>
+        </Logger>
+
+        <Logger name="org.apache.kafka" level="error"/>
+
+    </Loggers>
+</Configuration>
