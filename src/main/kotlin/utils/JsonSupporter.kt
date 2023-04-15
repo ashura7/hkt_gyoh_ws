@@ -10,13 +10,13 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.modules.SerializersModule
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.concurrent.ConcurrentHashMap
 
 object JsonSupporter {
     val json = Json {
@@ -43,6 +43,10 @@ object JsonSupporter {
     fun toJsonElement(file: Path): JsonElement {
         val content = String(Files.readAllBytes(file))
         return toJsonElement(content)
+    }
+
+    inline fun <reified T> toJsonElement(src: T): JsonElement {
+        return json.encodeToJsonElement(src)
     }
 }
 
